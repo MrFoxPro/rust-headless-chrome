@@ -325,8 +325,8 @@ impl Process {
 
         let mut args = vec![
             port_option.as_str(),
-            "--verbose",
-            "--log-level=0",
+            // "--verbose",
+            // "--log-level=0",
             "--no-first-run",
             data_dir_option.as_str(),
         ];
