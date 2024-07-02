@@ -1754,7 +1754,7 @@ impl Tab {
         self.call_method(Page::StopLoading(None)).map(|_| true)
     }
 
-    fn bypass_user_agent(&self) -> Result<()> {
+    pub fn bypass_user_agent(&self) -> Result<()> {
         let object = self.evaluate("window.navigator.userAgent", true)?;
 
         match object.value.map(|x| x.to_string()) {
@@ -1771,7 +1771,7 @@ impl Tab {
         }
     }
 
-    fn bypass_wedriver(&self) -> Result<()> {
+    pub fn bypass_wedriver(&self) -> Result<()> {
         self.call_method(Page::AddScriptToEvaluateOnNewDocument {
             source: "Object.defineProperty(navigator, 'webdriver', {get: () => undefined});"
                 .to_string(),
@@ -1781,7 +1781,7 @@ impl Tab {
         Ok(())
     }
 
-    fn bypass_chrome(&self) -> Result<()> {
+    pub fn bypass_chrome(&self) -> Result<()> {
         self.call_method(Page::AddScriptToEvaluateOnNewDocument {
             source: "window.chrome = { runtime: {} };".to_string(),
             world_name: None,
@@ -1790,7 +1790,7 @@ impl Tab {
         Ok(())
     }
 
-    fn bypass_permissions(&self) -> Result<()> {
+    pub fn bypass_permissions(&self) -> Result<()> {
         let r = "const originalQuery = window.navigator.permissions.query;
         window.navigator.permissions.__proto__.query = parameters =>
         parameters.name === 'notifications'
@@ -1805,7 +1805,7 @@ impl Tab {
         Ok(())
     }
 
-    fn bypass_plugins(&self) -> Result<()> {
+    pub fn bypass_plugins(&self) -> Result<()> {
         self.call_method(Page::AddScriptToEvaluateOnNewDocument {
             source: "Object.defineProperty(navigator, 'plugins', { get: () => [
             {filename:'internal-pdf-viewer'},
@@ -1819,7 +1819,7 @@ impl Tab {
         Ok(())
     }
 
-    fn bypass_webgl_vendor(&self) -> Result<()> {
+    pub fn bypass_webgl_vendor(&self) -> Result<()> {
         let r = "const getParameter = WebGLRenderingContext.getParameter;
         WebGLRenderingContext.prototype.getParameter = function(parameter) {
             // UNMASKED_VENDOR_WEBGL
